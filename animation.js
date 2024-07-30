@@ -36,7 +36,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
 
             const sparkles_geometry = new THREE.CircleGeometry(circle_radius, 12);
-            sparkles_mesh = new THREE.InstancedMesh(sparkles_geometry, new THREE.MeshBasicMaterial({ color: 0x82C57F, side: THREE.DoubleSide }), circle_count);
+            sparkles_mesh = new THREE.InstancedMesh(sparkles_geometry, new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide }), circle_count / 4);
             
             for (let i = 0; i < circle_count; i += 4) {
 
@@ -52,11 +52,15 @@
                 }
                 sparkles_matrix.setPosition(x, y, z);
                 sparkles_mesh.setMatrixAt(points_count, sparkles_matrix);
+                
                 sparkles_mesh.setColorAt(points_count, new THREE.Color(form[i + 3]));
+                var col = new THREE.Color();
+                sparkles_mesh.getColorAt(points_count, col);
+
                 sparkles_mesh.instanceColor.needsUpdate = true;
+
                 points_count++;
             }
-            console.log(points_count);
             sparkles_mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
                         scene.add(sparkles_mesh);
 
@@ -89,42 +93,39 @@
         
         function render() {
 
-            var pos_old = new THREE.Vector3();
-            var pos_new = new THREE.Vector3();
+            var pos = new THREE.Vector3();
             var quat = new THREE.Quaternion();
-            var angle = 0;
             var scale = new THREE.Vector3();
             var scale_factor = 1;
 
             for (let i = 0; i < points_count; i++) {
                 if (i < points_count / 4) {
                     sparkles_mesh.getMatrixAt(i, sparkles_matrix);
-                    sparkles_matrix.decompose(pos_old, quat, scale);
+                    sparkles_matrix.decompose(pos, quat, scale);
                     scale_factor = 1;
                     scale = new THREE.Vector3(scale_factor, scale_factor, 1);
-                    pos_new.x = pos_old.x;
-                    pos_new.y = pos_old.y + Math.sin(pos_new.x + utime) / 1500;
-                    sparkles_matrix.compose(pos_new, quat, scale);
+                    pos.y = pos.y + Math.sin(pos.x + utime) / 1500;
+                    sparkles_matrix.compose(pos, quat, scale);
                     sparkles_mesh.setMatrixAt(i, sparkles_matrix);
                 }
                 if (i >= points_count / 4 && i <= points_count / 2) {
                     sparkles_mesh.getMatrixAt(i, sparkles_matrix);
-                    sparkles_matrix.decompose(pos_old, quat, scale);
+                    sparkles_matrix.decompose(pos, quat, scale);
                     scale_factor = 0.8;
                     scale = new THREE.Vector3(scale_factor, scale_factor, 1);
-                    pos_new.x = pos_old.x - Math.sin(pos_new.x + utime * 0.8) / 1200;
-                    pos_new.y = pos_old.y + Math.sin(pos_new.x + utime * 0.8) / 1300;
-                    sparkles_matrix.compose(pos_new, quat, scale);
+                    pos.x = pos.x - Math.sin(pos.x + utime * 0.8) / 1200;
+                    pos.y = pos.y + Math.sin(pos.x + utime * 0.8) / 1300;
+                    sparkles_matrix.compose(pos, quat, scale);
                     sparkles_mesh.setMatrixAt(i, sparkles_matrix);
                 }
                 if (i> points_count / 2) {
                     sparkles_mesh.getMatrixAt(i, sparkles_matrix);
-                    sparkles_matrix.decompose(pos_old, quat, scale);
+                    sparkles_matrix.decompose(pos, quat, scale);
                     scale_factor = 0.9;
                     scale = new THREE.Vector3(scale_factor, scale_factor, 1);
-                    pos_new.x = pos_old.x - Math.sin(pos_new.x + utime * 0.5) / 1200;
-                    pos_new.y = pos_old.y + Math.sin(pos_new.x + utime * 0.5) / 1300;
-                    sparkles_matrix.compose(pos_new, quat, scale);
+                    pos.x = pos.x - Math.sin(pos.x + utime * 0.5) / 1200;
+                    pos.y = pos.y + Math.sin(pos.x + utime * 0.5) / 1300;
+                    sparkles_matrix.compose(pos, quat, scale);
                     sparkles_mesh.setMatrixAt(i, sparkles_matrix);
                 }
             }
