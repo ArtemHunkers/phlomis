@@ -1,0 +1,17 @@
+1. Распаковать архив в папку со скриптами.
+2. Создать ссылку на головной скрипт в тэге <head> типа
+
+	 <script src="./Scripts/animation.js" type="module"></script>
+
+3. В тэге <body> использовать элемент с id=container как canvas типа
+
+	<div id="container" class="render"/>
+
+4. Можно, как обычно, применять стили, например,
+
+	.render {
+    		width: 100%;
+    		height: 100%;
+    		background-color: transparent;
+	}
+
